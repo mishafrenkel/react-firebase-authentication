@@ -2,7 +2,7 @@ import React from 'react';
 
 import { withFirebase } from '../Firebase';
 
-class AdminPage extends Component {
+class AdminPage extends React.Component {
   constructor(props) {
     super(props)
 
@@ -18,14 +18,14 @@ class AdminPage extends Component {
     this.props.firebase.users().on('value', snapshot => {
       const userObject = snapshot.val();
 
-      const userList = Object.keys(usersObject).map(key => ({
+      const userList = Object.keys(userObject).map(key => ({
         ...userObject[key],
         uid: key,
       }));
 
 
       this.setState({
-        users: userList
+        users: userList,
         loading: false,
       });
     });
@@ -48,7 +48,7 @@ class AdminPage extends Component {
   }
 }
 
-const UserList = ({ }) => (
+const UserList = ({ users }) => (
   <ul>
     {users.map(user => (
       <li key={user.uid}>
