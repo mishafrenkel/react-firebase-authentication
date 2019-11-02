@@ -29,11 +29,6 @@ class Firebase {
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
 
-  doSendEmailVerification = () =>
-    this.auth.currentUser.sendEmailVerification({
-      url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT,
-    });
-
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
 
@@ -49,6 +44,11 @@ class Firebase {
   doSignOut = () => this.auth.signOut();
 
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
+
+  doSendEmailVerification = () =>
+    this.auth.currentUser.sendEmailVerification({
+      url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT,
+    });
 
   doPasswordUpdate = password =>
     this.auth.currentUser.updatePassword(password);
@@ -73,7 +73,7 @@ class Firebase {
               uid: authUser.uid,
               email: authUser.email,
               emailVerified: authUser.emailVerified,
-               providerData: authUser.providerData,
+              providerData: authUser.providerData,
               ...dbUser,
             };
 
