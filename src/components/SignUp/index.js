@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
@@ -31,27 +30,30 @@ class SignUpFormBase extends Component {
 
   onSubmit = event => {
     const { username, email, passwordOne, isAdmin } = this.state;
+    const roles = [];
 
-    const roles = {};
     if (isAdmin) {
-      roles[ROLES.ADMIN] = ROLES.ADMIN;
+      roles.push(ROLES.ADMIN);
     }
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        // Create user in Firebase realtime database
-        return this.props.firebase
+        // Create a user in your Firebase realtime database
+        this.props.firebase
           .user(authUser.user.uid)
           .set({
             username,
             email,
             roles,
+          })
+          .then(() => {
+            this.setState({ ...INITIAL_STATE });
+            this.props.history.push(ROUTES.HOME);
+          })
+          .catch(error => {
+            this.setState({ error });
           });
-      })
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
         this.setState({ error });
